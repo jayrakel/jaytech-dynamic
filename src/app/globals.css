@@ -1,0 +1,76 @@
+/* src/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --accent-teal: #14B8A6;
+    --accent-blue: #3B82F6;
+    --bg-dark:  #0D1421;
+    --bg-light: #F8FAFC;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  ::-webkit-scrollbar       { width: 4px; }
+  ::-webkit-scrollbar-track  { background: var(--bg-dark); }
+  ::-webkit-scrollbar-thumb  { background: var(--accent-teal); border-radius: 2px; }
+  ::selection { background: rgba(20,184,166,.25); }
+
+  .font-heading { font-family: var(--font-heading), 'Syne', sans-serif; }
+  .font-body    { font-family: var(--font-body),    'DM Sans', sans-serif; }
+}
+
+@layer utilities {
+  .grad-text {
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .grad-bg {
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+  }
+  .border-accent { border-color: rgba(20,184,166,.2); }
+  .border-accent-hi { border-color: rgba(20,184,166,.4); }
+
+  .card-dark {
+    background: rgba(17,27,46,.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(20,184,166,.12);
+    border-radius: 1rem;
+  }
+
+  .rv {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .rv.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Stagger helpers */
+  .d1 { transition-delay: .08s; }
+  .d2 { transition-delay: .16s; }
+  .d3 { transition-delay: .24s; }
+  .d4 { transition-delay: .32s; }
+  .d5 { transition-delay: .40s; }
+  .d6 { transition-delay: .48s; }
+}
+
+/* Admin sidebar active link */
+.admin-link-active {
+  background: rgba(20,184,166,.12);
+  color: #2DD4BF !important;
+  border-left: 3px solid var(--accent-teal);
+}
+
+/* Rich text editor styles */
+.ql-container { border-color: rgba(20,184,166,.18) !important; border-radius: 0 0 8px 8px !important; }
+.ql-toolbar  { border-color: rgba(20,184,166,.18) !important; border-radius: 8px 8px 0 0 !important; background: #111B2E !important; }
+.ql-editor   { background: #0D1421; color: #F0F6FF; min-height: 220px; }
+.ql-stroke   { stroke: #9DB5D0 !important; }
+.ql-fill     { fill: #9DB5D0 !important; }

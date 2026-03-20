@@ -1,0 +1,222 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Admin user ──────────────────────────────────────────
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+  messages  Message[]  @relation("RepliedBy")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+}
+
+// ── Blog ─────────────────────────────────────────────────
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  excerpt     String
+  content     String     @db.Text
+  coverImage  String?
+  category    String
+  tags        String[]
+  published   Boolean    @default(false)
+  featured    Boolean    @default(false)
+  views       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  publishedAt DateTime?
+}
+
+// ── Portfolio ─────────────────────────────────────────────
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  fullDesc    String?  @db.Text
+  category    String
+  tags        String[]
+  image       String
+  images      String[]
+  liveUrl     String?
+  githubUrl   String?
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ── Contact / Messages ────────────────────────────────────
+model Message {
+  id          String        @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String?
+  service     String?
+  budget      String?
+  message     String        @db.Text
+  status      MessageStatus @default(UNREAD)
+  starred     Boolean       @default(false)
+  reply       String?       @db.Text
+  repliedAt   DateTime?
+  repliedById String?
+  repliedBy   User?         @relation("RepliedBy", fields: [repliedById], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// ── Newsletter ────────────────────────────────────────────
+model Subscriber {
+  id          String             @id @default(cuid())
+  email       String             @unique
+  name        String?
+  status      SubscriberStatus   @default(ACTIVE)
+  token       String             @unique @default(cuid())
+  confirmedAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+enum SubscriberStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+model Newsletter {
+  id          String   @id @default(cuid())
+  subject     String
+  content     String   @db.Text
+  sentAt      DateTime?
+  sentCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+// ── Site Settings (key-value store for everything dynamic) ─
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  type      String   @default("string") // string | json | boolean | color
+  group     String   @default("general")
+  label     String?
+  updatedAt DateTime @updatedAt
+}
+
+// ── Team Members ──────────────────────────────────────────
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String
+  image     String
+  email     String?
+  linkedin  String?
+  twitter   String?
+  github    String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ── Services ──────────────────────────────────────────────
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  icon        String
+  features    String[]
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ── Pricing Plans ─────────────────────────────────────────
+model PricingPlan {
+  id          String   @id @default(cuid())
+  name        String
+  price       String
+  currency    String   @default("KES")
+  period      String   @default("project")
+  description String
+  features    String[]
+  highlighted Boolean  @default(false)
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ── Payments (Stripe) ─────────────────────────────────────
+model Payment {
+  id            String        @id @default(cuid())
+  email         String
+  name          String
+  amount        Float
+  currency      String        @default("USD")
+  description   String?
+  status        PaymentStatus @default(PENDING)
+  stripeId      String?       @unique
+  metadata      Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// ── Media Library ─────────────────────────────────────────
+model Media {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  publicId    String   @unique
+  type        String   // image | pdf | video
+  size        Int?
+  width       Int?
+  height      Int?
+  folder      String?
+  createdAt   DateTime @default(now())
+}
