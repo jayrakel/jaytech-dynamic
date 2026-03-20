@@ -9,8 +9,8 @@ const APP    = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 // 🎨 MASTER EMAIL TEMPLATE 
 async function buildEmail(content: string, footerExtras: string = '') {
-  // 1. Fetch the live settings from the database to get the logo URL
-  const settings = await getSettings().catch(() => ({}));
+  // ✅ THE FIX: Added 'as Record<string, string>' so TS knows site_name exists
+  const settings = await getSettings().catch(() => ({} as Record<string, string>));
   const logoUrl = settings.logo_url || '';
 
   // 2. Build the Header Logo (Full Color)
