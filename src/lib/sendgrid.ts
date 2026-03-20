@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import { getSettings } from '@/lib/settings'; // Import our settings fetcher
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM   = `Jay TechWave Solutions <onboarding@resend.dev>`;
+const FROM   = `Jay TechWave Solutions <hello@jaytechwavesolutions.co.ke>`;
 const ADMIN  = process.env.ADMIN_EMAIL || 'jaytechwavesolutions@gmail.com';
 const APP    = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
