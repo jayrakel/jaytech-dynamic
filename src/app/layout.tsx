@@ -1,10 +1,11 @@
-// src/app/layout.tsx
 import type { Metadata } from 'next';
 import { Syne, DM_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
 import { getSettings } from '@/lib/settings';
 import './globals.css';
+import GlobalLoader from "@/components/GlobalLoader";
+import { Suspense } from "react";
 
 const syne = Syne({
   subsets: ['latin'],
@@ -47,7 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const settings = await getSettings();
   const themeMode = settings.theme_mode || 'dark';
 
-  // Build dynamic CSS variables from settings
+  // Build dynamic CSS variables from settings database
   const cssVars = `
     :root {
       --accent-teal: ${settings.theme_accent_teal || '#14B8A6'};
@@ -61,10 +62,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" suppressHydrationWarning className={themeMode}>
       <head>
         <style dangerouslySetInnerHTML={{ __html: cssVars }} />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        />
       </head>
       <body className={`${syne.variable} ${dmSans.variable} font-body bg-slate-900 dark:bg-[var(--bg-dark)] text-slate-100 transition-colors duration-300`}>
         <ThemeProvider defaultTheme={themeMode as 'dark' | 'light'}>
+          
+          {/* ✅ Global Loader placed at the top of the body for z-index priority */}
+          <Suspense fallback={null}>
+            <GlobalLoader logo={settings.favicon_url || '/favicon.ico'} />
+          </Suspense>
+
+          {/* Main Page Content */}
           {children}
+
+          {/* Notifications */}
           <Toaster
             position="top-right"
             toastOptions={{

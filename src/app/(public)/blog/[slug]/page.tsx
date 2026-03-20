@@ -25,7 +25,7 @@ export default async function BlogPost({ params }: { params: { slug: string } })
         <h1 className="font-heading font-black text-4xl lg:text-5xl leading-tight mb-6">{post.title}</h1>
         <p className="text-slate-400 text-xl leading-relaxed mb-10">{post.excerpt}</p>
         {post.coverImage && <Image src={post.coverImage} alt={post.title} width={900} height={480} className="w-full rounded-2xl mb-12 object-cover h-80" />}
-        <div className="prose prose-invert prose-teal max-w-none text-slate-300 prose-headings:font-heading prose-headings:text-white prose-a:text-teal-400" dangerouslySetInnerHTML={{ __html: post.content }} />
+        <div className="prose prose-invert prose-teal max-w-none text-slate-300 prose-headings:font-heading prose-headings:text-white prose-a:text-teal-400 whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: post.content }} />
         {post.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-800">
             {post.tags.map(t => <span key={t} className="px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs text-slate-400">#{t}</span>)}

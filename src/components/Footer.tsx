@@ -1,5 +1,4 @@
 'use client';
-// src/components/Footer.tsx
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -10,6 +9,7 @@ interface FooterProps {
 }
 
 export default function Footer({ settings }: FooterProps) {
+  const [name, setName]   = useState(''); // <-- ADDED THIS STATE
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,10 +20,14 @@ export default function Footer({ settings }: FooterProps) {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, name }), // <-- NOW SENDING THE NAME TO THE DATABASE
       });
       const data = await res.json();
-      if (res.ok) { toast.success(data.message || 'Check your email!'); setEmail(''); }
+      if (res.ok) { 
+        toast.success(data.message || 'Check your email!'); 
+        setEmail(''); 
+        setName(''); // Clear the name box
+      }
       else toast.error(data.error || 'Something went wrong');
     } finally { setLoading(false); }
   };
@@ -59,7 +63,7 @@ export default function Footer({ settings }: FooterProps) {
           <div>
             <Link href="/" className="flex items-center gap-3 mb-5">
               {settings.logo_url ? (
-                <Image src={settings.logo_url} alt={settings.site_name} width={120} height={40} className="h-9 w-auto" />
+                <Image src={settings.logo_url} alt={settings.site_name || "Logo"} width={120} height={40} className="h-18 w-auto" />
               ) : (
                 <>
                   <div className="w-9 h-9 grad-bg rounded-lg flex items-center justify-center font-heading font-bold text-white text-sm">JT</div>
@@ -133,39 +137,39 @@ export default function Footer({ settings }: FooterProps) {
                   <a href={`tel:${settings.contact_phone_1}`} className="text-slate-400 hover:text-teal-400 transition-colors">{settings.contact_phone_1}</a>
                 </div>
               )}
-              {settings.contact_phone_2 && (
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="text-teal-400">☎</span>
-                  <a href={`tel:${settings.contact_phone_2}`} className="text-slate-400 hover:text-teal-400 transition-colors">{settings.contact_phone_2}</a>
-                </div>
-              )}
-              {settings.contact_address && (
-                <div className="flex items-start gap-3 text-sm">
-                  <span className="text-teal-400 mt-0.5">📍</span>
-                  <span className="text-slate-400">{settings.contact_address}</span>
-                </div>
-              )}
             </div>
 
             <h4 className="font-heading text-xs font-bold tracking-widest text-white uppercase mb-3">Newsletter</h4>
             <p className="text-slate-500 text-xs mb-3">Monthly tech tips & updates.</p>
-            <div className="flex">
+            
+            {/* UPDATED: Now stacks Name and Email inputs */}
+            <div className="space-y-2">
               <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && subscribe()}
-                placeholder="your@email.com"
-                className="flex-1 px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-l-lg text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-teal-500 min-w-0"
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="First Name (Optional)"
+                className="w-full px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-teal-500"
               />
-              <button
-                onClick={subscribe}
-                disabled={loading}
-                className="px-4 grad-bg text-white font-heading text-xs font-bold rounded-r-lg hover:opacity-90 transition-all disabled:opacity-50"
-              >
-                {loading ? '…' : '→'}
-              </button>
+              <div className="flex">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && subscribe()}
+                  placeholder="your@email.com"
+                  className="flex-1 px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-l-lg text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-teal-500 min-w-0"
+                />
+                <button
+                  onClick={subscribe}
+                  disabled={loading}
+                  className="px-4 grad-bg text-white font-heading text-xs font-bold rounded-r-lg hover:opacity-90 transition-all disabled:opacity-50"
+                >
+                  {loading ? '…' : '→'}
+                </button>
+              </div>
             </div>
+
           </div>
         </div>
 

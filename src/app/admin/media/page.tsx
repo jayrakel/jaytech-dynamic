@@ -1,13 +1,19 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+
 export default function MediaAdmin() {
   const [media, setMedia] = useState<any[]>([]);
   const [uploading, setUploading] = useState(false);
+  
   const load = () => fetch("/api/admin/media",{credentials:"include"}).then(r=>r.json()).then(d=>Array.isArray(d)&&setMedia(d));
-  useEffect(load,[]);
+  
+  // ✅ THE FIX: Wrap load() in an anonymous function so it doesn't return a Promise
+  useEffect(() => {
+    load();
+  }, []);
+
   const upload = async (file:File) => {
     setUploading(true);
     const fd = new FormData(); fd.append("file",file); fd.append("folder","jaytech/library");
@@ -17,11 +23,14 @@ export default function MediaAdmin() {
     else toast.error("Upload failed.");
     setUploading(false);
   };
+
   const del = async (id:string, publicId:string) => {
     await fetch("/api/admin/upload",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,publicId}),credentials:"include"});
     toast.success("Deleted"); load();
   };
+
   const copy = (url:string) => { navigator.clipboard.writeText(url); toast.success("URL copied!"); };
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">

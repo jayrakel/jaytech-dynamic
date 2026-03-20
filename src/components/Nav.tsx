@@ -12,13 +12,13 @@ interface NavProps {
 
 export default function Nav({ settings }: NavProps) {
   const [stuck, setStuck]   = useState(false);
-const [open,  setOpen]    = useState(false);
-const [drop,  setDrop]    = useState(false);
-const [mounted, setMounted] = useState(false);
-const { theme, setTheme } = useTheme();
-const pathname            = usePathname();
+  const [open,  setOpen]    = useState(false);
+  const [drop,  setDrop]    = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const pathname            = usePathname();
 
-useEffect(() => { setMounted(true); }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const fn = () => setStuck(window.scrollY > 50);
@@ -56,7 +56,7 @@ useEffect(() => { setMounted(true); }, []);
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             {settings.logo_url ? (
-              <Image src={settings.logo_url} alt={settings.site_name} width={120} height={40} className="h-9 w-auto object-contain" />
+              <Image src={settings.logo_url} alt={settings.site_name} width={120} height={70} className="h-30 w-auto object-contain" />
             ) : (
               <>
                 <div className="w-9 h-9 grad-bg rounded-lg flex items-center justify-center font-heading font-bold text-white text-sm">JT</div>
@@ -79,45 +79,57 @@ useEffect(() => { setMounted(true); }, []);
                 }`}>{l.label}</Link>
               </li>
             ))}
-            <li className="relative" onMouseLeave={() => setDrop(false)}>
+            
+            {/* --- DROPDOWN FIX START --- */}
+            <li 
+              className="relative" 
+              onMouseEnter={() => setDrop(true)} 
+              onMouseLeave={() => setDrop(false)}
+            >
               <button
-                onMouseEnter={() => setDrop(true)}
                 className="px-3 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-all flex items-center gap-1"
               >
                 More <span className="text-xs">▾</span>
               </button>
+              
               {drop && (
-                <ul className="absolute top-full left-1/2 -translate-x-1/2 mt-2 min-w-[180px] bg-slate-800 border border-slate-700 rounded-xl p-2 shadow-2xl">
-                  {moreLinks.map(l => (
-                    <li key={l.href}>
-                      <Link href={l.href} className="block px-3 py-2.5 text-sm text-slate-300 hover:text-teal-400 hover:bg-teal-400/5 rounded-lg transition-all">
-                        {l.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                /* The pt-2 here acts as the "bridge" so the menu doesn't close when moving the mouse down */
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2">
+                  <ul className="min-w-[180px] bg-slate-800 border border-slate-700 rounded-xl p-2 shadow-2xl">
+                    {moreLinks.map(l => (
+                      <li key={l.href}>
+                        <Link 
+                          href={l.href} 
+                          onClick={() => setDrop(false)}
+                          className="block px-3 py-2.5 text-sm text-slate-300 hover:text-teal-400 hover:bg-teal-400/5 rounded-lg transition-all"
+                        >
+                          {l.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </li>
+            {/* --- DROPDOWN FIX END --- */}
+
           </ul>
 
           {/* Right controls */}
           <div className="flex items-center gap-3">
-            {/* Theme toggle */}
             <button
-  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-  className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:text-teal-400 hover:border-teal-400/40 transition-all text-sm"
-  aria-label="Toggle theme"
-  suppressHydrationWarning
->
-  {mounted ? (theme === 'dark' ? '☀️' : '🌙') : '🌙'}
-</button>
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:text-teal-400 hover:border-teal-400/40 transition-all text-sm"
+              aria-label="Toggle theme"
+              suppressHydrationWarning
+            >
+              {mounted ? (theme === 'dark' ? '☀️' : '🌙') : '🌙'}
+            </button>
 
-            {/* CTA */}
             <Link href="/contact" className="hidden lg:inline-flex grad-bg text-white text-xs font-heading font-bold px-5 py-2.5 rounded-lg hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-lg shadow-teal-500/20">
               Get a Quote
             </Link>
 
-            {/* Hamburger */}
             <button
               onClick={() => setOpen(true)}
               className="lg:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800"

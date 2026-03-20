@@ -1,18 +1,25 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
+
 export default function PortfolioAdmin() {
   const [projects, setProjects] = useState<any[]>([]);
+  
   const load = () => fetch("/api/admin/portfolio",{credentials:"include"}).then(r=>r.json()).then(d=>Array.isArray(d)&&setProjects(d));
-  useEffect(load,[]);
+  
+  // ✅ THE FIX: Wrap load() so it doesn't return a Promise to React
+  useEffect(() => {
+    load();
+  }, []);
+
   const del = async (id:string) => {
     if (!confirm("Delete project?")) return;
     await fetch(`/api/admin/portfolio/${id}`,{method:"DELETE",credentials:"include"});
     toast.success("Deleted"); load();
   };
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">

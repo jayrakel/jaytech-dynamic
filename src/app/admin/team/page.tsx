@@ -1,18 +1,26 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
+
 export default function TeamAdmin() {
   const [members, setMembers] = useState<any[]>([]);
+  
   const load = () => fetch("/api/admin/team",{credentials:"include"}).then(r=>r.json()).then(d=>Array.isArray(d)&&setMembers(d));
-  useEffect(load,[]);
+  
+  // ✅ THE FIX: Wrap load() in an anonymous function so it doesn't return a Promise
+  useEffect(() => {
+    load();
+  }, []);
+  
   const del = async (id:string) => {
     if(!confirm("Remove team member?")) return;
     await fetch(`/api/admin/team/${id}`,{method:"DELETE",credentials:"include"});
-    toast.success("Removed"); load();
+    toast.success("Removed"); 
+    load();
   };
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">

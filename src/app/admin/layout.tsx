@@ -1,10 +1,15 @@
-
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  if (!session) redirect("/admin/login");
+
+  // No session = render children as-is (login page)
+  // Middleware already blocks access to all other /admin/* routes
+  if (!session) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen bg-slate-950">
       <AdminSidebar user={session.user as any} />
