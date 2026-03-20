@@ -11,9 +11,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-950">
+    // ✅ FIX: Added flex-col for mobile, md:flex-row for desktop
+    <div className="flex flex-col md:flex-row min-h-screen bg-slate-950">
       <AdminSidebar user={session.user as any} />
-      <main className="flex-1 overflow-auto">{children}</main>
+      
+      {/* ✅ FIX: Added pt-16 for mobile to account for the new top bar */}
+      <main className="flex-1 overflow-x-hidden pt-16 md:pt-0">
+        {children}
+      </main>
     </div>
   );
 }
