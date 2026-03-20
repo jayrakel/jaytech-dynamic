@@ -12,10 +12,13 @@ interface NavProps {
 
 export default function Nav({ settings }: NavProps) {
   const [stuck, setStuck]   = useState(false);
-  const [open,  setOpen]    = useState(false);
-  const [drop,  setDrop]    = useState(false);
-  const { theme, setTheme } = useTheme();
-  const pathname            = usePathname();
+const [open,  setOpen]    = useState(false);
+const [drop,  setDrop]    = useState(false);
+const [mounted, setMounted] = useState(false);
+const { theme, setTheme } = useTheme();
+const pathname            = usePathname();
+
+useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const fn = () => setStuck(window.scrollY > 50);
@@ -101,12 +104,13 @@ export default function Nav({ settings }: NavProps) {
           <div className="flex items-center gap-3">
             {/* Theme toggle */}
             <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:text-teal-400 hover:border-teal-400/40 transition-all text-sm"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? '☀️' : '🌙'}
-            </button>
+  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+  className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:text-teal-400 hover:border-teal-400/40 transition-all text-sm"
+  aria-label="Toggle theme"
+  suppressHydrationWarning
+>
+  {mounted ? (theme === 'dark' ? '☀️' : '🌙') : '🌙'}
+</button>
 
             {/* CTA */}
             <Link href="/contact" className="hidden lg:inline-flex grad-bg text-white text-xs font-heading font-bold px-5 py-2.5 rounded-lg hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-lg shadow-teal-500/20">
