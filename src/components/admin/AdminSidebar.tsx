@@ -15,6 +15,7 @@ const NAV = [
   { href:"/admin/media",       icon:"🗂️", label:"Media"      },
   { href:"/admin/payments",    icon:"💳", label:"Payments"   },
   { href:"/admin/settings",    icon:"⚙️", label:"Settings"   },
+  { href:"/admin/profile",       icon:"👥", label:"My Profile"},
 ];
 
 export default function AdminSidebar({ user }: { user: { name?: string; email?: string } }) {
