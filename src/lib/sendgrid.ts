@@ -1,26 +1,38 @@
-// src/lib/sendgrid.ts  — now powered by Resend
+// src/lib/sendgrid.ts  — powered by Resend
 import { Resend } from 'resend';
-import { getSettings } from '@/lib/settings'; // Import our settings fetcher
+import { getSettings } from '@/lib/settings';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM   = `Jay TechWave Solutions <hello@jaytechwavesolutions.co.ke>`;
 const ADMIN  = process.env.ADMIN_EMAIL || 'jaytechwavesolutions@gmail.com';
-const APP    = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
-// 🎨 MASTER EMAIL TEMPLATE 
+/**
+ * Returns the live app base URL at runtime — never falls back to localhost.
+ * NEXT_PUBLIC_* vars are baked in at build time; if unset during Railway's
+ * `npm run build` they become the literal string "undefined" in every link.
+ * Server-side vars (NEXTAUTH_URL / AUTH_URL) are evaluated fresh on every
+ * request, so they always reflect the correct deployed domain.
+ */
+function appUrl(): string {
+  const url =
+    process.env.NEXTAUTH_URL ||
+    process.env.AUTH_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    '';
+  return url.replace(/\/$/, ''); // strip trailing slash
+}
+
+// 🎨 MASTER EMAIL TEMPLATE
 async function buildEmail(content: string, footerExtras: string = '') {
-  // ✅ THE FIX: Added 'as Record<string, string>' so TS knows site_name exists
   const settings = await getSettings().catch(() => ({} as Record<string, string>));
   const logoUrl = settings.logo_url || '';
 
-  // 2. Build the Header Logo (Full Color)
-  const headerBrand = logoUrl 
-    ? `<img src="${logoUrl}" alt="Jay TechWave Solutions" style="height:45px; width:auto; display:block; margin:0 auto;" />`
+  const headerBrand = logoUrl
+    ? `<img src="${logoUrl}" alt="Jay TechWave Solutions" style="height:45px;width:auto;display:block;margin:0 auto;" />`
     : `<h1 style="color:#ffffff;margin:0;font-size:24px;letter-spacing:1px;font-weight:900;">Jay TechWave<span style="color:#14B8A6;">.</span></h1>`;
 
-  // 3. Build the Footer Logo (Sleek Grayscale & Faded)
   const footerBrand = logoUrl
-    ? `<img src="${logoUrl}" alt="Jay TechWave" style="height:24px; width:auto; display:block; margin:0 auto 15px auto; opacity:0.6; filter:grayscale(100%);" />`
+    ? `<img src="${logoUrl}" alt="Jay TechWave" style="height:24px;width:auto;display:block;margin:0 auto 15px auto;opacity:0.6;filter:grayscale(100%);" />`
     : ``;
 
   return `
@@ -35,7 +47,7 @@ async function buildEmail(content: string, footerExtras: string = '') {
       <tr>
         <td align="center">
           <table width="100%" max-width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.05);">
-            
+
             <tr>
               <td style="background-color:#020617;padding:35px 30px;text-align:center;">
                 ${headerBrand}
@@ -97,6 +109,11 @@ export async function sendContactNotification(msg: {
     </table>
     <h3 style="color:#0f172a;font-size:16px;">Message:</h3>
     <p style="background:#f1f5f9;padding:15px;border-left:4px solid #14B8A6;border-radius:4px;white-space:pre-wrap;">${msg.message}</p>
+    <div style="text-align:center;margin-top:24px;">
+      <a href="${appUrl()}/admin/messages" style="background-color:#14B8A6;color:#ffffff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">
+        View in Dashboard →
+      </a>
+    </div>
   `;
   await send({
     to: ADMIN,
@@ -128,13 +145,15 @@ export async function sendReply(opts: {
 export async function sendSubscriptionConfirm(opts: {
   email: string; name?: string; token: string;
 }) {
-  const confirmUrl = `${APP}/api/subscribe/confirm?token=${opts.token}`;
+  const confirmUrl = `${appUrl()}/api/subscribe/confirm?token=${opts.token}`;
   const content = `
     <h2 style="color:#0f172a;margin-top:0;text-align:center;">Welcome aboard!</h2>
     <p style="text-align:center;">Hi ${opts.name || 'there'}, thanks for subscribing to Jay TechWave Updates.</p>
     <p style="text-align:center;">Please click the button below to confirm your email address and activate your subscription.</p>
     <div style="text-align:center;margin:35px 0;">
-      <a href="${confirmUrl}" style="background-color:#14B8A6;color:#ffffff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">Confirm Subscription</a>
+      <a href="${confirmUrl}" style="background-color:#14B8A6;color:#ffffff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">
+        Confirm Subscription ✓
+      </a>
     </div>
     <p style="color:#94a3b8;font-size:12px;text-align:center;">If you didn't request this, you can safely ignore this email.</p>
   `;
@@ -151,18 +170,13 @@ export async function sendNewsletter(opts: {
   subscribers: { email: string; name?: string | null; token: string }[];
 }) {
   for (const sub of opts.subscribers) {
-    const unsubUrl = `${APP}/api/unsubscribe?token=${sub.token}`;
+    const unsubUrl = `${appUrl()}/api/unsubscribe?token=${sub.token}`;
     const firstName = sub.name ? sub.name.split(' ')[0] : 'there';
-    
+
     const personalizedContent = opts.content.replace(/\{\{name\}\}/gi, firstName);
     const personalizedSubject = opts.subject.replace(/\{\{name\}\}/gi, firstName);
 
-    const content = `
-      <div style="white-space:pre-wrap;">
-        ${personalizedContent}
-      </div>
-    `;
-
+    const content = `<div style="white-space:pre-wrap;">${personalizedContent}</div>`;
     const footerExtras = `<p style="margin:15px 0 0;"><a href="${unsubUrl}" style="color:#94a3b8;font-size:11px;text-decoration:underline;">Unsubscribe from these emails</a></p>`;
 
     await send({
@@ -178,18 +192,19 @@ export async function sendBlogNotification(opts: {
   postTitle: string; postSlug: string; postExcerpt: string;
   subscribers: { email: string; name?: string | null; token: string }[];
 }) {
-  const postUrl = `${APP}/blog/${opts.postSlug}`;
+  const postUrl = `${appUrl()}/blog/${opts.postSlug}`;
   for (const sub of opts.subscribers) {
-    const unsubUrl = `${APP}/api/unsubscribe?token=${sub.token}`;
+    const unsubUrl = `${appUrl()}/api/unsubscribe?token=${sub.token}`;
     const content = `
       <p style="color:#14B8A6;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">New Article</p>
       <h2 style="color:#0f172a;margin-top:0;font-size:22px;line-height:1.3;">${opts.postTitle}</h2>
       <p style="color:#475569;font-size:16px;">${opts.postExcerpt}</p>
       <div style="margin:30px 0 10px;">
-        <a href="${postUrl}" style="background-color:#0f172a;color:#ffffff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">Read Full Article →</a>
+        <a href="${postUrl}" style="background-color:#0f172a;color:#ffffff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">
+          Read Full Article →
+        </a>
       </div>
     `;
-
     const footerExtras = `<p style="margin:15px 0 0;"><a href="${unsubUrl}" style="color:#94a3b8;font-size:11px;text-decoration:underline;">Unsubscribe</a></p>`;
 
     await send({
