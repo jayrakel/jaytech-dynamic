@@ -10,6 +10,7 @@ const NAV = [
   { href:"/admin/messages",    icon:"💬", label:"Messages"   },
   { href:"/admin/blogs",       icon:"📝", label:"Blog Posts" },
   { href:"/admin/portfolio",   icon:"🖼️", label:"Portfolio"  },
+  { href:"/admin/services",    icon:"⚡", label:"Services"   },
   { href:"/admin/team",        icon:"👥", label:"Team"       },
   { href:"/admin/subscribers", icon:"📧", label:"Subscribers"},
   { href:"/admin/newsletter",  icon:"📨", label:"Newsletter" },

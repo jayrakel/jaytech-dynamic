@@ -15,5 +15,5 @@ export async function GET(req: NextRequest) {
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-  return NextResponse.redirect(`${baseUrl}/thank-you`);
+  return NextResponse.redirect(`${baseUrl}/?subscribed=true`);
 }
