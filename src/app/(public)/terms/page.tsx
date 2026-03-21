@@ -1,30 +1,88 @@
-
+// src/app/(public)/team/page.tsx
+import { prisma } from "@/lib/prisma";
+import Image from "next/image";
+import ScrollReveal from "@/components/ScrollReveal";
 import Link from "next/link";
-export default function Page() {
+export const revalidate = 60;
+
+export default async function TeamPage() {
+  const team = await prisma.teamMember.findMany({ where: { active: true }, orderBy: { order: "asc" } });
+
   return (
     <div className="min-h-screen bg-[var(--bg-dark)] pt-32 pb-24">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
-          <Link href="/" className="hover:text-teal-400 transition-colors">Home</Link>
-          <span>›</span><span className="text-teal-400">Terms of Use</span>
-        </div>
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-400/30 bg-teal-400/5 text-teal-400 text-xs font-heading font-bold tracking-widest uppercase mb-5">Legal</div>
-        <h1 className="font-heading font-black text-5xl mb-4"><span className="grad-text">Terms of Use</span></h1>
-        <p className="text-slate-400 text-lg mb-10">Rules and conditions governing your use of our website and services.</p>
-        <div className="flex gap-4 text-xs text-slate-500 mb-10 p-4 card-dark rounded-xl">
-          <span><strong className="text-slate-300">Effective:</strong> 1 January 2025</span>
-          <span><strong className="text-slate-300">Updated:</strong> 1 January 2025</span>
-          <span><strong className="text-slate-300">Version:</strong> 1.0</span>
-        </div>
-        <div className="p-5 rounded-xl bg-teal-400/5 border border-teal-400/20 text-sm text-slate-300 leading-relaxed mb-10">
-          ℹ️ This page governs your use of the Jay TechWave Solutions website and services. By using our site, you agree to these terms.
-        </div>
-        <div className="prose prose-invert prose-teal max-w-none prose-headings:font-heading prose-headings:text-white prose-a:text-teal-400 prose-li:text-slate-400 prose-p:text-slate-400">
-          <h2>1. Acceptance</h2><p>By using our website or engaging our services, you agree to these Terms of Use in full. If you disagree, please do not use our website or services.</p><h2>2. Our Services</h2><p>Jay TechWave Solutions provides web development, mobile app development, digital marketing, cloud infrastructure, cybersecurity, and IT support services. Specific deliverables are defined in a written Statement of Work (SOW) agreed before work begins.</p><h2>3. Intellectual Property</h2><p>Upon full payment, ownership of custom deliverables transfers to the client. Pre-existing frameworks, libraries, and tools remain our property. We retain the right to display completed work in our portfolio unless agreed otherwise in writing.</p><h2>4. Payments</h2><p>Standard payment is 50% deposit upfront and 50% on delivery. Invoices are due within 14 days. Late payments may incur a 1.5% monthly fee. Deposits are non-refundable once work has commenced.</p><h2>5. Confidentiality</h2><p>Both parties agree to keep shared proprietary information confidential and not disclose it to third parties without prior written consent. This obligation survives termination of the engagement.</p><h2>6. Limitation of Liability</h2><p>To the maximum extent permitted by law, our total liability shall not exceed the fees paid in the three months preceding the claim. We are not liable for indirect, incidental, or consequential damages.</p><h2>7. Governing Law</h2><p>These Terms are governed by the laws of the Republic of Kenya. Disputes are subject to the exclusive jurisdiction of the courts of Nairobi.</p><h2>8. Contact</h2><p>Questions about these Terms? Email <a href="mailto:jaytechwavesolutions@gmail.com">jaytechwavesolutions@gmail.com</a>.</p>
-        </div>
-        <div className="mt-12 pt-8 border-t border-slate-800">
-          <Link href="/privacy" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-400 transition-colors border border-slate-800 hover:border-teal-400/30 px-5 py-2.5 rounded-xl">
-            Also read our  Privacy Policy  →
+      <div className="max-w-7xl mx-auto px-6">
+        <ScrollReveal className="text-center mb-16">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-400/30 bg-teal-400/5 text-teal-400 text-xs font-heading font-bold tracking-widest uppercase mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse-dot"></span>Our Team
+          </span>
+          <h1 className="font-heading font-black text-5xl mb-4">Meet the <span className="grad-text">People</span></h1>
+          <p className="text-slate-400 text-lg max-w-lg mx-auto">Passionate technologists committed to excellence on every project.</p>
+        </ScrollReveal>
+
+        {team.length > 0 ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            {team.map((m, i) => (
+              <ScrollReveal key={m.id} delay={i % 4 * 80} className="group text-center">
+                {/* Circular photo */}
+                <div className="relative mx-auto mb-5 w-36 h-36">
+                  <div className="w-full h-full rounded-full overflow-hidden border-2 border-slate-700 group-hover:border-teal-400/60 transition-all duration-300 bg-slate-800">
+                    {m.image ? (
+                      <Image
+                        src={m.image}
+                        alt={m.name}
+                        width={144}
+                        height={144}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-4xl">👤</div>
+                    )}
+                  </div>
+                  <div className="absolute inset-0 rounded-full border-2 border-teal-400/0 group-hover:border-teal-400/30 transition-all duration-300 scale-110" />
+                </div>
+
+                <div className="font-heading font-bold text-white text-base">{m.name}</div>
+                <div className="text-teal-400 text-xs font-bold mt-1 mb-2 uppercase tracking-wider">{m.role}</div>
+                {m.bio && (
+                  <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 max-w-[220px] mx-auto">{m.bio}</p>
+                )}
+                {(m.linkedin || m.twitter || m.email) && (
+                  <div className="flex items-center justify-center gap-2 mt-4">
+                    {m.linkedin && (
+                      <a href={m.linkedin} target="_blank" rel="noopener"
+                        className="w-8 h-8 rounded-lg border border-slate-700 bg-slate-900 flex items-center justify-center text-slate-500 hover:border-teal-400/50 hover:text-teal-400 transition-all text-xs">
+                        <i className="fab fa-linkedin-in"></i>
+                      </a>
+                    )}
+                    {m.twitter && (
+                      <a href={m.twitter} target="_blank" rel="noopener"
+                        className="w-8 h-8 rounded-lg border border-slate-700 bg-slate-900 flex items-center justify-center text-slate-500 hover:border-teal-400/50 hover:text-teal-400 transition-all text-xs">
+                        <i className="fab fa-x-twitter"></i>
+                      </a>
+                    )}
+                    {m.email && (
+                      <a href={`mailto:${m.email}`}
+                        className="w-8 h-8 rounded-lg border border-slate-700 bg-slate-900 flex items-center justify-center text-slate-500 hover:border-teal-400/50 hover:text-teal-400 transition-all text-xs">
+                        <i className="fas fa-envelope"></i>
+                      </a>
+                    )}
+                  </div>
+                )}
+              </ScrollReveal>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 text-slate-500">
+            No team members yet.{" "}
+            <Link href="/admin/team" className="text-teal-400 hover:underline">Add some in admin →</Link>
+          </div>
+        )}
+
+        <div className="mt-24 card-dark rounded-3xl p-12 text-center">
+          <h2 className="font-heading font-black text-3xl mb-4">We&apos;re <span className="grad-text">Hiring</span></h2>
+          <p className="text-slate-400 mb-8 max-w-md mx-auto">Talented? Passionate about tech? We are always looking for great people to join the team.</p>
+          <Link href="/contact" className="grad-bg text-white font-heading font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition-all text-sm">
+            Get In Touch →
           </Link>
         </div>
       </div>

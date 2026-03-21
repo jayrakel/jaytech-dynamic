@@ -9,11 +9,12 @@ import ScrollReveal from '@/components/ScrollReveal';
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [settings, services, projects, posts] = await Promise.all([
+  const [settings, services, projects, posts, team] = await Promise.all([
     getSettings(),
     prisma.service.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
     prisma.project.findMany({ where: { featured: true }, orderBy: { order: 'asc' }, take: 6 }),
     prisma.post.findMany({ where: { published: true }, orderBy: { publishedAt: 'desc' }, take: 3 }),
+    prisma.teamMember.findMany({ where: { active: true }, orderBy: { order: 'asc' }, take: 8 }),
   ]);
 
   const iconMap: Record<string, string> = {
@@ -247,6 +248,50 @@ export default async function HomePage() {
                       <p className="text-slate-500 text-sm leading-relaxed line-clamp-2">{post.excerpt}</p>
                     </div>
                   </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+
+      {/* ── TEAM SECTION ──────────────────────────────────── */}
+      {team.length > 0 && (
+        <section className="py-28 bg-slate-900 border-t border-slate-800">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex justify-between items-end gap-6 mb-16 flex-wrap">
+              <ScrollReveal>
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-400/30 bg-teal-400/5 text-teal-400 text-xs font-heading font-bold tracking-widest uppercase mb-5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse-dot"></span>The Team
+                </span>
+                <h2 className="font-heading font-black text-4xl">The <span className="grad-text">People</span> Behind It All</h2>
+              </ScrollReveal>
+              <Link href="/team" className="border border-slate-700 text-slate-400 font-heading font-bold px-6 py-2.5 rounded-xl hover:border-teal-400/40 hover:text-teal-400 transition-all text-sm">
+                Meet Everyone →
+              </Link>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+              {team.map((m, i) => (
+                <ScrollReveal key={m.id} delay={i % 4 * 80} className="group text-center">
+                  <div className="relative mx-auto mb-5 w-32 h-32">
+                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-slate-700 group-hover:border-teal-400/60 transition-all duration-300 bg-slate-800">
+                      {m.image ? (
+                        <Image
+                          src={m.image}
+                          alt={m.name}
+                          width={128}
+                          height={128}
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-4xl">👤</div>
+                      )}
+                    </div>
+                    <div className="absolute inset-0 rounded-full border-2 border-teal-400/0 group-hover:border-teal-400/30 transition-all duration-300 scale-110" />
+                  </div>
+                  <div className="font-heading font-bold text-white text-sm">{m.name}</div>
+                  <div className="text-teal-400 text-xs font-bold mt-1 uppercase tracking-wider">{m.role}</div>
                 </ScrollReveal>
               ))}
             </div>
