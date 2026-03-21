@@ -46,8 +46,10 @@ export default function Nav({ settings }: NavProps) {
   const moreLinks = [
     { href: '/pricing', label: 'Pricing Plans' },
     { href: '/team', label: 'Our Team' },
+    { href: '/quote',    label: '✨ AI Quote Estimator' },
     { href: '/privacy', label: 'Privacy Policy' },
     { href: '/terms', label: 'Terms of Use' },
+    { href: '/license',  label: 'License' },
   ];
 
   return (

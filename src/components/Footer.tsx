@@ -45,6 +45,7 @@ export default function Footer({ settings }: FooterProps) {
     { href: '/team',      label: 'Our Team' },
     { href: '/portfolio', label: 'Portfolio' },
     { href: '/pricing',   label: 'Pricing' },
+    { href: '/quote',     label: '✨ AI Quote' },
     { href: '/blog',      label: 'Blog' },
     { href: '/contact',   label: 'Contact' },
   ];
@@ -181,6 +182,7 @@ export default function Footer({ settings }: FooterProps) {
           <div className="flex gap-5">
             <Link href="/privacy" className="text-slate-600 text-xs hover:text-teal-400 transition-colors">Privacy Policy</Link>
             <Link href="/terms"   className="text-slate-600 text-xs hover:text-teal-400 transition-colors">Terms of Use</Link>
+            <Link href="/license" className="text-slate-600 text-xs hover:text-teal-400 transition-colors">License</Link>
             <Link href="/contact" className="text-slate-600 text-xs hover:text-teal-400 transition-colors">Support</Link>
           </div>
         </div>
