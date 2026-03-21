@@ -7,10 +7,14 @@ export default auth((req) => {
   const isLoginPage  = req.nextUrl.pathname === '/admin/login';
 
   if (isAdminRoute && !isLoginPage && !req.auth) {
-    return NextResponse.redirect(new URL('/admin/login', req.url));
+    // Use req.url as the base — this preserves the actual host on the live site
+    const loginUrl = new URL('/admin/login', req.url);
+    return NextResponse.redirect(loginUrl);
   }
+
   if (isLoginPage && req.auth) {
-    return NextResponse.redirect(new URL('/admin', req.url));
+    const dashboardUrl = new URL('/admin', req.url);
+    return NextResponse.redirect(dashboardUrl);
   }
 
   return NextResponse.next();

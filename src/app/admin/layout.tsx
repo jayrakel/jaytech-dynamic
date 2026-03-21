@@ -28,15 +28,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     return <>{children}</>;
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: (session.user as any).id },
-    select: { mustChangePassword: true },
-  });
+  const [user, settings] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: (session.user as any).id },
+      select: { mustChangePassword: true },
+    }),
+    getSettings(),
+  ]);
 
   return (
     <div className="flex min-h-screen bg-slate-950">
-      <AdminSidebar user={session.user as any} />
-      <main className="flex-1 overflow-auto">
+      <AdminSidebar
+        user={session.user as any}
+        logo={settings.logo_url || settings.favicon_url || undefined}
+        siteName={settings.site_name || 'Jay TechWave Solutions'}
+      />
+      <main className="flex-1 overflow-auto md:ml-0 pt-16 md:pt-0">
         {user?.mustChangePassword && (
           <div className="bg-yellow-400/10 border-b border-yellow-400/30 px-8 py-3 flex items-center gap-3">
             <span className="text-yellow-400 text-lg">⚠️</span>
