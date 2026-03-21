@@ -37,6 +37,24 @@ const DEFAULTS: Settings = {
   notify_new_message:  'true',
   notify_new_subscriber: 'true',
   notify_email:        'jaytechwavesolutions@gmail.com',
+
+  // ── About page ────────────────────────────────────────────
+  about_story:         'Jay TechWave Solutions was founded in Nairobi with one goal: make world-class technology accessible to every Kenyan business — not just the corporations.',
+  about_story2:        'Today, we are a team of engineers, designers, and digital strategists who have delivered 150+ projects across Kenya and East Africa. Our clients range from Nairobi startups to established enterprises.',
+  about_highlight_1:   'Founded 2019 in Nairobi, Kenya',
+  about_highlight_2:   '12+ certified engineers and specialists',
+  about_highlight_3:   '150+ projects across East Africa',
+  about_highlight_4:   'Agile, transparent, and client-first approach',
+  about_value_1_icon:  '🤝',
+  about_value_1_title: 'Client First',
+  about_value_1_desc:  'Every decision filtered through one question: is this the best outcome for our client?',
+  about_value_2_icon:  '👁️',
+  about_value_2_title: 'Radical Transparency',
+  about_value_2_desc:  'No hidden fees, vague timelines, or technical jargon. Clear communication at every step.',
+  about_value_3_icon:  '🏆',
+  about_value_3_title: 'Quality Over Speed',
+  about_value_3_desc:  'We deliver on time — but never cut corners to do it. Every product is built to last.',
+  about_team_cta:      'true',
 };
 
 // Fetch all settings as a key→value map (returns defaults if DB unavailable)

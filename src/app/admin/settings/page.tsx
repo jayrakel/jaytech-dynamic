@@ -25,7 +25,7 @@ export default function SettingsPage() {
     setSaving(false);
   };
   const inp = "w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:border-teal-500 transition-all";
-  const tabs = [{id:"brand",label:"🏷️ Brand"},{id:"contact",label:"📞 Contact"},{id:"social",label:"🌐 Social"},{id:"hero",label:"🦸 Hero"},{id:"theme",label:"🎨 Theme"},{id:"stats",label:"📊 Stats"},{id:"notifications",label:"🔔 Alerts"}];
+  const tabs = [{id:"brand",label:"🏷️ Brand"},{id:"contact",label:"📞 Contact"},{id:"social",label:"🌐 Social"},{id:"hero",label:"🦸 Hero"},{id:"about",label:"ℹ️ About"},{id:"theme",label:"🎨 Theme"},{id:"stats",label:"📊 Stats"},{id:"notifications",label:"🔔 Alerts"}];
   const groups: Record<string,{key:string,label:string,type?:string,opts?:string[]}[]> = {
     brand: [{key:"site_name",label:"Site Name"},{key:"site_tagline",label:"Tagline"},{key:"site_description",label:"Description"},{key:"logo_url",label:"Logo URL (upload below)"},{key:"services_pdf_url",label:"Services PDF URL (upload below)"}],
     contact:[{key:"contact_email",label:"Email",type:"email"},{key:"contact_phone_1",label:"Phone 1"},{key:"contact_phone_2",label:"Phone 2"},{key:"contact_address",label:"Address"},{key:"business_hours",label:"Business Hours"}],
@@ -33,6 +33,23 @@ export default function SettingsPage() {
     hero:[{key:"hero_title",label:"Hero Title"},{key:"hero_subtitle",label:"Hero Subtitle"},{key:"hero_cta_primary",label:"Primary CTA Text"},{key:"hero_cta_secondary",label:"Secondary CTA Text"},{key:"hero_image",label:"Hero Image URL (upload below)"}],
     theme:[{key:"theme_mode",label:"Default Mode",type:"select",opts:["dark","light"]},{key:"theme_accent_teal",label:"Primary Color",type:"color"},{key:"theme_accent_blue",label:"Accent Color",type:"color"},{key:"theme_bg_dark",label:"Dark Background",type:"color"},{key:"theme_bg_light",label:"Light Background",type:"color"}],
     stats:[{key:"stat_projects",label:"Projects Completed"},{key:"stat_clients",label:"Happy Clients"},{key:"stat_years",label:"Years Experience"},{key:"stat_satisfaction",label:"Client Satisfaction"}],
+    about:[
+      {key:"about_story",label:"Company Story (Paragraph 1)"},
+      {key:"about_story2",label:"Company Story (Paragraph 2)"},
+      {key:"about_highlight_1",label:"Highlight 1"},
+      {key:"about_highlight_2",label:"Highlight 2"},
+      {key:"about_highlight_3",label:"Highlight 3"},
+      {key:"about_highlight_4",label:"Highlight 4"},
+      {key:"about_value_1_icon",label:"Value 1 Icon (emoji)"},
+      {key:"about_value_1_title",label:"Value 1 Title"},
+      {key:"about_value_1_desc",label:"Value 1 Description"},
+      {key:"about_value_2_icon",label:"Value 2 Icon (emoji)"},
+      {key:"about_value_2_title",label:"Value 2 Title"},
+      {key:"about_value_2_desc",label:"Value 2 Description"},
+      {key:"about_value_3_icon",label:"Value 3 Icon (emoji)"},
+      {key:"about_value_3_title",label:"Value 3 Title"},
+      {key:"about_value_3_desc",label:"Value 3 Description"},
+    ],
     notifications:[{key:"notify_email",label:"Notification Email",type:"email"},{key:"notify_new_message",label:"Alert on New Message",type:"select",opts:["true","false"]},{key:"notify_new_subscriber",label:"Alert on New Subscriber",type:"select",opts:["true","false"]}],
   };
   const currentGroup = groups[tab] || [];
