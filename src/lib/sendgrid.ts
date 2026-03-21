@@ -145,7 +145,8 @@ export async function sendReply(opts: {
 export async function sendSubscriptionConfirm(opts: {
   email: string; name?: string; token: string;
 }) {
-  const confirmUrl = `${appUrl()}/api/subscribe/confirm?token=${opts.token}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const confirmUrl = `${appUrl}/api/subscribe/confirm?token=${opts.token}`;
   const content = `
     <h2 style="color:#0f172a;margin-top:0;text-align:center;">Welcome aboard!</h2>
     <p style="text-align:center;">Hi ${opts.name || 'there'}, thanks for subscribing to Jay TechWave Updates.</p>
@@ -169,8 +170,9 @@ export async function sendNewsletter(opts: {
   subject: string; content: string;
   subscribers: { email: string; name?: string | null; token: string }[];
 }) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
   for (const sub of opts.subscribers) {
-    const unsubUrl = `${appUrl()}/api/unsubscribe?token=${sub.token}`;
+    const unsubUrl = `${appUrl}/api/unsubscribe?token=${sub.token}`;
     const firstName = sub.name ? sub.name.split(' ')[0] : 'there';
 
     const personalizedContent = opts.content.replace(/\{\{name\}\}/gi, firstName);
@@ -192,9 +194,10 @@ export async function sendBlogNotification(opts: {
   postTitle: string; postSlug: string; postExcerpt: string;
   subscribers: { email: string; name?: string | null; token: string }[];
 }) {
-  const postUrl = `${appUrl()}/blog/${opts.postSlug}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const postUrl = `${appUrl}/blog/${opts.postSlug}`;
   for (const sub of opts.subscribers) {
-    const unsubUrl = `${appUrl()}/api/unsubscribe?token=${sub.token}`;
+    const unsubUrl = `${appUrl}/api/unsubscribe?token=${sub.token}`;
     const content = `
       <p style="color:#14B8A6;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">New Article</p>
       <h2 style="color:#0f172a;margin-top:0;font-size:22px;line-height:1.3;">${opts.postTitle}</h2>

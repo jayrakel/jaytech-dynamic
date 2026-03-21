@@ -9,5 +9,6 @@ export async function GET(req: NextRequest) {
     where: { token },
     data:  { status: "ACTIVE", confirmedAt: new Date() },
   });
-  return NextResponse.redirect(new URL("/?subscribed=1", req.url));
+  // return NextResponse.redirect(new URL("/?subscribed=1", req.url));
+  return NextResponse.redirect('${baseUrl}/?subscribed=1');
 }
