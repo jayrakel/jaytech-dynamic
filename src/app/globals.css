@@ -61,6 +61,244 @@
   .d6 { transition-delay: .48s; }
 }
 
+/* ===================================================
+   LIGHT THEME — Driven by logo-extracted color palette
+   CSS variables are injected by layout.tsx from settings
+   =================================================== */
+
+html:not(.dark) {
+  color-scheme: light;
+  --bg-dark:  var(--light-bg-base,   #F8FAFC);
+  --bg-light: var(--light-bg-surface, #FFFFFF);
+}
+
+/* ── Base ── */
+html:not(.dark) body {
+  background-color: var(--light-bg-base, #F8FAFC) !important;
+  color: var(--light-text-primary, #0F172A) !important;
+}
+html:not(.dark) ::-webkit-scrollbar-track { background: var(--light-bg-secondary, #F1F5F9) !important; }
+html:not(.dark) ::-webkit-scrollbar-thumb { background: var(--light-accent, #14B8A6) !important; }
+
+/* ── All background shades ── */
+html:not(.dark) .bg-slate-950,
+html:not(.dark) .bg-slate-950\/90,
+html:not(.dark) .bg-slate-950\/97,
+html:not(.dark) .bg-slate-950\/95 {
+  background-color: var(--light-bg-secondary, #F1F5F9) !important;
+}
+html:not(.dark) .bg-slate-900,
+html:not(.dark) .bg-slate-900\/80,
+html:not(.dark) .bg-slate-900\/85,
+html:not(.dark) .bg-slate-900\/90 {
+  background-color: var(--light-bg-surface, #FFFFFF) !important;
+}
+html:not(.dark) .bg-slate-800,
+html:not(.dark) .bg-slate-800\/50,
+html:not(.dark) .bg-slate-800\/80 {
+  background-color: var(--light-bg-secondary, #F1F5F9) !important;
+}
+html:not(.dark) .bg-slate-700 {
+  background-color: var(--light-border-subtle, #E2E8F0) !important;
+}
+html:not(.dark) .bg-\[var\(--bg-dark\)\] {
+  background-color: var(--light-bg-base, #F8FAFC) !important;
+}
+
+/* ── All text shades ── */
+html:not(.dark) .text-white        { color: var(--light-text-primary,   #0F172A) !important; }
+html:not(.dark) .text-slate-100    { color: var(--light-text-primary,   #1E293B) !important; }
+html:not(.dark) .text-slate-200    { color: var(--light-text-secondary, #334155) !important; }
+html:not(.dark) .text-slate-300    { color: var(--light-text-secondary, #475569) !important; }
+html:not(.dark) .text-slate-400    { color: var(--light-text-muted,     #64748B) !important; }
+html:not(.dark) .text-slate-500    { color: var(--light-text-faint,     #94A3B8) !important; }
+html:not(.dark) .text-slate-600    { color: var(--light-border-strong,  #CBD5E1) !important; }
+
+/* Teal/accent text adjusts to extracted accent */
+html:not(.dark) .text-teal-400     { color: var(--light-accent,      #0D9488) !important; }
+html:not(.dark) .text-teal-300     { color: var(--light-accent,      #14B8A6) !important; }
+
+/* ── All borders ── */
+html:not(.dark) .border-slate-800,
+html:not(.dark) .border-b.border-slate-800,
+html:not(.dark) .border-t.border-slate-800 {
+  border-color: var(--light-border-subtle,  #E2E8F0) !important;
+}
+html:not(.dark) .border-slate-700  { border-color: var(--light-border-default, #CBD5E1) !important; }
+html:not(.dark) .border-slate-600  { border-color: var(--light-border-strong,  #94A3B8) !important; }
+html:not(.dark) .divide-slate-800 > * + * { border-color: var(--light-border-subtle, #E2E8F0) !important; }
+html:not(.dark) .divide-x.divide-slate-800 > * + * { border-color: var(--light-border-subtle, #E2E8F0) !important; }
+
+/* ── Card ── */
+html:not(.dark) .card-dark {
+  background: var(--light-bg-surface, #FFFFFF) !important;
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+  box-shadow: 0 2px 12px rgba(15,23,42,.07) !important;
+}
+
+/* ── Nav ── */
+html:not(.dark) nav { background-color: transparent; }
+html:not(.dark) nav.bg-slate-950\/90,
+html:not(.dark) .backdrop-blur-xl {
+  background-color: var(--light-nav-bg, rgba(255,255,255,0.95)) !important;
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+}
+html:not(.dark) .bg-white\/8 { background-color: var(--light-accent-light, rgba(20,184,166,.1)) !important; }
+html:not(.dark) .hover\:bg-white\/5:hover { background-color: var(--light-accent-light, rgba(20,184,166,.07)) !important; }
+html:not(.dark) .bg-slate-950\/97 { background-color: var(--light-overlay, rgba(248,250,252,.98)) !important; }
+
+/* ── Inputs ── */
+html:not(.dark) input:not([type="color"]):not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) textarea,
+html:not(.dark) select {
+  background-color: var(--light-bg-surface, #FFFFFF) !important;
+  border-color: var(--light-border-default, #CBD5E1) !important;
+  color: var(--light-text-primary, #1E293B) !important;
+}
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: var(--light-text-faint, #94A3B8) !important;
+}
+html:not(.dark) input:focus:not([type="color"]):not([type="checkbox"]),
+html:not(.dark) textarea:focus,
+html:not(.dark) select:focus {
+  border-color: var(--light-accent, #14B8A6) !important;
+  box-shadow: 0 0 0 3px var(--light-accent-light, rgba(20,184,166,.15)) !important;
+}
+
+/* ── Buttons with slate backgrounds ── */
+html:not(.dark) .hover\:bg-slate-800:hover { background-color: var(--light-accent-light, #EFF6FF) !important; }
+html:not(.dark) .hover\:bg-slate-700:hover { background-color: var(--light-border-subtle, #E2E8F0) !important; }
+html:not(.dark) .bg-slate-800.rounded-xl,
+html:not(.dark) .bg-slate-800.rounded-lg,
+html:not(.dark) .bg-slate-800.rounded-2xl,
+html:not(.dark) .bg-slate-800.rounded-full {
+  background-color: var(--light-bg-secondary, #F1F5F9) !important;
+}
+
+/* ── Prose (blog content) ── */
+html:not(.dark) .prose-invert { color: var(--light-text-secondary, #334155) !important; }
+html:not(.dark) .prose-invert h1,
+html:not(.dark) .prose-invert h2,
+html:not(.dark) .prose-invert h3,
+html:not(.dark) .prose-invert h4 { color: var(--light-text-primary, #0F172A) !important; }
+html:not(.dark) .prose-invert p,
+html:not(.dark) .prose-invert li  { color: var(--light-text-secondary, #475569) !important; }
+html:not(.dark) .prose-invert strong { color: var(--light-text-primary, #0F172A) !important; }
+html:not(.dark) .prose-invert hr  { border-color: var(--light-border-subtle, #E2E8F0) !important; }
+
+/* ── Hero ── */
+html:not(.dark) section.min-h-screen { background-color: var(--light-bg-base, #F8FAFC) !important; }
+html:not(.dark) .bg-teal-500\/10 { background-color: var(--light-accent-light, rgba(20,184,166,.06)) !important; }
+html:not(.dark) .bg-blue-500\/8  { background-color: rgba(59,130,246,.04) !important; }
+
+/* ── Floating hero badges ── */
+html:not(.dark) .bg-slate-900\/85 {
+  background-color: rgba(255,255,255,.92) !important;
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+}
+
+/* ── Marquee bar ── */
+html:not(.dark) .border-y.border-slate-800.bg-slate-900 {
+  background-color: var(--light-bg-secondary, #F1F5F9) !important;
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+}
+
+/* ── Stats bar ── */
+html:not(.dark) .border-y.border-slate-800 {
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+  background-color: var(--light-bg-base, #F8FAFC) !important;
+}
+
+/* ── Portfolio items ── */
+html:not(.dark) .border-slate-800.rounded-2xl { border-color: var(--light-border-subtle, #E2E8F0) !important; }
+html:not(.dark) .bg-slate-800.flex.items-center.justify-center { background-color: var(--light-bg-secondary, #F1F5F9) !important; }
+
+/* ── CTA section ── */
+html:not(.dark) .py-24.bg-slate-900 { background-color: var(--light-bg-secondary, #F1F5F9) !important; }
+
+/* ── Blog card overlays ── */
+html:not(.dark) .bg-slate-950\/95 { background-color: rgba(255,255,255,.95) !important; }
+
+/* ── Footer ── */
+html:not(.dark) footer {
+  background-color: var(--light-bg-secondary, #F1F5F9) !important;
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+}
+html:not(.dark) footer .bg-slate-800 { background-color: var(--light-bg-surface, #FFFFFF) !important; }
+html:not(.dark) footer .border-slate-700 { border-color: var(--light-border-default, #CBD5E1) !important; }
+html:not(.dark) footer .border-slate-800 { border-color: var(--light-border-subtle, #E2E8F0) !important; }
+
+/* ── Teal accent colors (use extracted accent) ── */
+html:not(.dark) .bg-teal-400\/10  { background-color: var(--light-accent-light, rgba(20,184,166,.08)) !important; }
+html:not(.dark) .bg-teal-400\/5   { background-color: var(--light-accent-light, rgba(20,184,166,.05)) !important; }
+html:not(.dark) .border-teal-400\/30 { border-color: var(--light-accent, rgba(20,184,166,.35)) !important; }
+html:not(.dark) .border-teal-400\/20 { border-color: var(--light-accent, rgba(20,184,166,.25)) !important; }
+
+/* ── Status badges ── */
+html:not(.dark) .bg-green-400\/10  { background-color: rgba(74,222,128,.1) !important; }
+html:not(.dark) .bg-yellow-400\/10 { background-color: rgba(250,204,21,.1) !important; }
+html:not(.dark) .bg-red-400\/10    { background-color: rgba(248,113,113,.1) !important; }
+html:not(.dark) .bg-blue-400\/10   { background-color: rgba(96,165,250,.1) !important; }
+
+/* ── Toaster ── */
+html:not(.dark) [data-hot-toast] {
+  background: var(--light-bg-surface, #FFFFFF) !important;
+  color: var(--light-text-primary, #1E293B) !important;
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+}
+
+/* ─────────────────────────────────────────────
+   ADMIN — sidebar stays dark, content goes light
+   ───────────────────────────────────────────── */
+html:not(.dark) aside {
+  background-color: #1E293B !important;
+  border-color: #334155 !important;
+}
+html:not(.dark) aside .text-slate-400  { color: #94A3B8 !important; }
+html:not(.dark) aside .text-teal-400   { color: #2DD4BF !important; }
+html:not(.dark) aside .text-white      { color: #F8FAFC !important; }
+html:not(.dark) aside .hover\:bg-slate-800:hover { background-color: #334155 !important; }
+html:not(.dark) aside .bg-slate-800    { background-color: #334155 !important; }
+html:not(.dark) aside .border-slate-800 { border-color: #334155 !important; }
+html:not(.dark) aside .border-b.border-slate-800,
+html:not(.dark) aside .border-t.border-slate-800 { border-color: #334155 !important; }
+
+/* Admin main */
+html:not(.dark) main { background-color: var(--light-bg-base, #F8FAFC) !important; }
+html:not(.dark) main .bg-slate-950 { background-color: var(--light-bg-base, #F8FAFC) !important; }
+html:not(.dark) main .bg-slate-900 { background-color: var(--light-bg-surface, #FFFFFF) !important; }
+html:not(.dark) main .bg-slate-800 { background-color: var(--light-bg-secondary, #F1F5F9) !important; }
+html:not(.dark) main .border-slate-800 { border-color: var(--light-border-subtle, #E2E8F0) !important; }
+html:not(.dark) main .border-slate-700 { border-color: var(--light-border-default, #CBD5E1) !important; }
+html:not(.dark) main .text-white    { color: var(--light-text-primary,   #0F172A) !important; }
+html:not(.dark) main .text-slate-100 { color: var(--light-text-primary,  #1E293B) !important; }
+html:not(.dark) main .text-slate-200 { color: var(--light-text-secondary,#334155) !important; }
+html:not(.dark) main .text-slate-300 { color: var(--light-text-secondary,#475569) !important; }
+html:not(.dark) main .text-slate-400 { color: var(--light-text-muted,    #64748B) !important; }
+html:not(.dark) main .text-slate-500 { color: var(--light-text-faint,    #94A3B8) !important; }
+html:not(.dark) main .hover\:bg-slate-800:hover { background-color: var(--light-accent-light, #EFF6FF) !important; }
+html:not(.dark) main .hover\:bg-slate-700:hover { background-color: var(--light-border-subtle, #E2E8F0) !important; }
+html:not(.dark) main .card-dark {
+  background: var(--light-bg-surface, #FFFFFF) !important;
+  border-color: var(--light-border-subtle, #E2E8F0) !important;
+  box-shadow: 0 1px 6px rgba(15,23,42,.06) !important;
+}
+html:not(.dark) main input:not([type="color"]):not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) main textarea,
+html:not(.dark) main select {
+  background-color: var(--light-bg-secondary, #F8FAFC) !important;
+  border-color: var(--light-border-default, #CBD5E1) !important;
+  color: var(--light-text-primary, #1E293B) !important;
+}
+
+/* Login page */
+html:not(.dark) .min-h-screen.bg-slate-950 { background-color: var(--light-bg-base, #F8FAFC) !important; }
+
+/* ===================================================
+   END LIGHT THEME
+   =================================================== */
+
 /* Admin sidebar active link */
 .admin-link-active {
   background: rgba(20,184,166,.12);
