@@ -3,12 +3,17 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
-  if (!token) return NextResponse.redirect(new URL("/", req.url));
+
+  if (!token) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
   await prisma.subscriber.updateMany({
     where: { token },
-    data:  { status: "ACTIVE", confirmedAt: new Date() },
+    data: { status: "ACTIVE", confirmedAt: new Date() },
   });
-  // return NextResponse.redirect(new URL("/?subscribed=1", req.url));
-  return NextResponse.redirect('${baseUrl}/thank-you');
+
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  return NextResponse.redirect(`${baseUrl}/thank-you`);
 }
