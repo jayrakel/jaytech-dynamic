@@ -1,3 +1,4 @@
+// src/app/api/ai/chat/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 const SYSTEM = `You are an AI assistant for Jay TechWave Solutions, a premier IT company based in Nairobi, Kenya.
@@ -30,29 +31,41 @@ INSTRUCTIONS:
 - Do not make up services or prices not listed above
 - Respond in the same language the visitor uses`;
 
+// Shared Groq fetch helper
+async function groq(messages: object[], maxTokens = 600) {
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: maxTokens,
+      messages,
+    }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error?.message || 'Groq API error');
+  return data.choices?.[0]?.message?.content || '';
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
-    if (!process.env.ANTHROPIC_API_KEY) {
+
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json({ error: 'AI not configured' }, { status: 503 });
     }
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
-        system: SYSTEM,
-        messages,
-      }),
-    });
-    const data = await response.json();
-    const text = data.content?.[0]?.text || 'Sorry, I could not process that. Please contact us directly.';
-    return NextResponse.json({ message: text });
+
+    // Prepend system message then append the conversation
+    const groqMessages = [
+      { role: 'system', content: SYSTEM },
+      ...messages,
+    ];
+
+    const text = await groq(groqMessages, 600);
+    return NextResponse.json({ message: text || 'Sorry, I could not process that. Please contact us directly.' });
   } catch (e) {
     console.error('AI chat error:', e);
     return NextResponse.json({ error: 'AI unavailable' }, { status: 500 });
