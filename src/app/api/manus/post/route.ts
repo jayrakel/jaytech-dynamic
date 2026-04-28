@@ -19,15 +19,29 @@ export async function POST(req: NextRequest) {
 
     const slug = slugify(body.title, { lower: true, strict: true });
 
-    const post = await prisma.post.create({
-      data: {
+    // Use upsert to update if the slug already exists, or create if it doesn't
+    const post = await prisma.post.upsert({
+      where: { slug: slug },
+      update: {
+        title: body.title,
+        excerpt: body.excerpt,
+        content: body.content,
+        category: body.category,
+        tags: body.tags || [],
+        published: body.published !== undefined ? body.published : true,
+        featured: body.featured || false,
+        coverImage: body.coverImage || null,
+        // Only update publishedAt if it's being published now and wasn't before
+        ...(body.published ? { publishedAt: new Date() } : {}),
+      },
+      create: {
         title: body.title,
         slug: slug,
         excerpt: body.excerpt,
         content: body.content,
         category: body.category,
         tags: body.tags || [],
-        published: body.published || false,
+        published: body.published !== undefined ? body.published : true,
         featured: body.featured || false,
         coverImage: body.coverImage || null,
         publishedAt: body.published ? new Date() : null,
