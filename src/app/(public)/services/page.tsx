@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import ScrollReveal from "@/components/ScrollReveal";
 import Link from "next/link";
 export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 export default async function ServicesPage() {
   const services = await prisma.service.findMany({ where:{active:true}, orderBy:{order:"asc"} });
   const iconMap: Record<string,string> = { "code-slash":"💻","phone":"📱","megaphone":"📣","cloud-arrow-up":"☁️","shield-lock":"🔒","tools":"🔧" };
