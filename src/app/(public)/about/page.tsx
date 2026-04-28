@@ -5,6 +5,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 import Link from 'next/link';
 import Image from 'next/image';
 export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function AboutPage() {
   const [s, teamMembers] = await Promise.all([

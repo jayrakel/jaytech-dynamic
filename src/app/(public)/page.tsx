@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
 import ContactForm from '@/components/ContactForm';
 import ScrollReveal from '@/components/ScrollReveal';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const [settings, services, projects, posts, team] = await Promise.all([

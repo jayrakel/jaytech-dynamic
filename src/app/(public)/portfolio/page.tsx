@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
+export const dynamic = 'force-dynamic';
 
 export default function PortfolioPage() {
   const [projects, setProjects] = useState<any[]>([]);

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import ScrollReveal from "@/components/ScrollReveal";
 import Link from "next/link";
 export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 export default async function PricingPage() {
   const plans = await prisma.pricingPlan.findMany({ where:{active:true}, orderBy:{order:"asc"} });
   return (
